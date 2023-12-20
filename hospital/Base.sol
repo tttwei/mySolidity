@@ -1,22 +1,17 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.4.25;
 pragma experimental ABIEncoderV2;
 contract Base {
-    
-    struct PersonInfo{
-        
-        // 姓名
-        string name;
-        // 性别
-        uint sex;
-        // 年龄
-        uint age;
-        // 身份
-        personType theType;
+    constructor () public {
+        admin=msg.sender;
     }
-    enum personType {
-        doctor,
-        patient 
-        }
+
+    address private admin;
+
+    modifier onlyAdmin(){
+        require(admin==msg.sender,"only admin");
+        _;
+    }
+
+   
    
 }

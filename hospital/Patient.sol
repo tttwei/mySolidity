@@ -1,36 +1,57 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.4.25;
 pragma experimental ABIEncoderV2;
 
 import "./Base.sol";
 contract Patient is Base {
-     modifier onlyPatient{
-         require(patientMap[msg.sender].person.theType==personType.patient,"only patient");
-        _;
-    }
+    
 
     struct PatientInfo{
-        PersonInfo person;
+        // 姓名
+        string name;
+        // 性别
+        uint8 sex;
+        // 年龄
+        uint8 age;
+        //类型
+        int8 theType;
+        // 出生日期
         string dataBirth;
     }
 
     mapping (address => PatientInfo) public patientMap;
+    address[] private patientList;
     
     
 
     // 注册
-    function addPatient(PatientInfo memory p) public {
-         string memory str = patientMap[msg.sender].person.name;
+    function addPatient(string memory name,uint8 sex,uint8 age ,string memory dataBirth) public {
+        string memory str = patientMap[msg.sender].name;
         require(keccak256(abi.encodePacked(str)) == keccak256(""),"user has exist");
+        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
         patientMap[msg.sender]=p;
-        // patientMap[msg.sender].person.own=msg.sender;
+    }
+    
+    function addPatient(address addr,string memory name,uint8 sex,uint8 age ,string memory dataBirth) public onlyAdmin{
+        string memory str = patientMap[addr].name;
+        require(keccak256(abi.encodePacked(str)) == keccak256(""),"user has exist");
+        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
+        patientMap[addr]=p;
     }
 
     // 修改
-    function updatePatient(PatientInfo memory p) public {
-        string memory str = patientMap[msg.sender].person.name;
+    function updatePatient(string memory name,uint8 sex,uint8 age ,string memory dataBirth) public onlyAdmin{
+        string memory str = patientMap[msg.sender].name;
         require(keccak256(abi.encodePacked(str)) != keccak256(""),"user has exist");
+        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
         patientMap[msg.sender]=p;
+    }
+
+    function updatePatient(address addr,string memory name,uint8 sex,uint8 age ,string memory dataBirth) public onlyAdmin{
+        string memory str = patientMap[addr].name;
+        require(keccak256(abi.encodePacked(str)) != keccak256(""),"user has exist");
+        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
+        patientMap[addr]=p;
     }
 
     // 查询
@@ -38,9 +59,17 @@ contract Patient is Base {
         return patientMap[addr];
     }
 
-    // function hhh()public pure   returns(uint ){
-    //     return 19;
-    // }   
+    function queryPatient() public view returns (PatientInfo memory){
+        return patientMap[msg.sender];
+    }
 
+    //查询所有
+    function queryAllPatient()public view onlyAdmin returns(PatientInfo[] memory){
+        PatientInfo[] memory list;
+        for (uint i=0;i<patientList.length;i++) {
+            list[i]=patientMap[patientList[i]];
+        }
+        return list;
+    }
 
 }

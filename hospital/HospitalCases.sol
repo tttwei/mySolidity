@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.4.25;
 pragma experimental ABIEncoderV2;
 
 import "./Patient.sol";
@@ -7,7 +7,8 @@ import "./Doctor.sol";
 
 
 
-contract hospital is Patient,Doctor{
+contract HospitalCases is Patient,Doctor{
+    
    
 
         struct Cases{
@@ -26,10 +27,10 @@ contract hospital is Patient,Doctor{
             // 处方
             string prescription;
             // 需支付费用
-            uint money;
+            string money;
 
         }
-    mapping (uint => Cases) public cases;
+    mapping (address => Cases[]) public cases;
     uint indexId=0;
 
     
@@ -44,22 +45,16 @@ contract hospital is Patient,Doctor{
         string memory _appointmentTime,
         string memory _description,
         string memory _prescription,
-        uint _money
-    ) public onlyDoctor {
+        string _money) public {
         indexId++;
-        cases[indexId].id=indexId;
-        cases[indexId].doctor=doctorMap[msg.sender];
-        cases[indexId].patient=patientMap[_patient];
-        cases[indexId].appointmentType=_appointmentType;
-        cases[indexId].appointmentTime=_appointmentTime;
-        cases[indexId].description=_description;
-        cases[indexId].prescription=_prescription;
-        cases[indexId].money=_money;
+        Cases memory c = Cases(indexId,doctorMap[msg.sender],patientMap[_patient],_appointmentType,_appointmentTime,_description,_prescription,_money);
+        cases[_patient].push(c);
+        
     }
 
     // 查询病例
-    function queryCases(uint _id) public view onlyDoctor returns (Cases memory) {  
-        return cases[_id];
+    function queryCases(address addr) public view  returns (Cases[] memory) {  
+        return cases[addr];
     }
 
     
