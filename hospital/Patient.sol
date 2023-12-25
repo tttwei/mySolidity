@@ -13,14 +13,13 @@ contract Patient is Base {
         uint8 sex;
         // 年龄
         uint8 age;
-        //类型
+        //类型 1是医生 2是病人
         int8 theType;
         // 出生日期
         string dataBirth;
     }
 
     mapping (address => PatientInfo) public patientMap;
-    address[] private patientList;
     
     
 
@@ -28,14 +27,14 @@ contract Patient is Base {
     function addPatient(string memory name,uint8 sex,uint8 age ,string memory dataBirth) public {
         string memory str = patientMap[msg.sender].name;
         require(keccak256(abi.encodePacked(str)) == keccak256(""),"user has exist");
-        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
+        PatientInfo memory p = PatientInfo(name,sex,age,2,dataBirth);
         patientMap[msg.sender]=p;
     }
     
     function addPatient(address addr,string memory name,uint8 sex,uint8 age ,string memory dataBirth) public onlyAdmin{
         string memory str = patientMap[addr].name;
         require(keccak256(abi.encodePacked(str)) == keccak256(""),"user has exist");
-        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
+        PatientInfo memory p = PatientInfo(name,sex,age,2,dataBirth);
         patientMap[addr]=p;
     }
 
@@ -43,14 +42,14 @@ contract Patient is Base {
     function updatePatient(string memory name,uint8 sex,uint8 age ,string memory dataBirth) public onlyAdmin{
         string memory str = patientMap[msg.sender].name;
         require(keccak256(abi.encodePacked(str)) != keccak256(""),"user has exist");
-        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
+        PatientInfo memory p = PatientInfo(name,sex,age,2,dataBirth);
         patientMap[msg.sender]=p;
     }
 
     function updatePatient(address addr,string memory name,uint8 sex,uint8 age ,string memory dataBirth) public onlyAdmin{
         string memory str = patientMap[addr].name;
         require(keccak256(abi.encodePacked(str)) != keccak256(""),"user has exist");
-        PatientInfo memory p = PatientInfo(name,sex,age,0,dataBirth);
+        PatientInfo memory p = PatientInfo(name,sex,age,2,dataBirth);
         patientMap[addr]=p;
     }
 
@@ -63,13 +62,6 @@ contract Patient is Base {
         return patientMap[msg.sender];
     }
 
-    //查询所有
-    function queryAllPatient()public view onlyAdmin returns(PatientInfo[] memory){
-        PatientInfo[] memory list;
-        for (uint i=0;i<patientList.length;i++) {
-            list[i]=patientMap[patientList[i]];
-        }
-        return list;
-    }
+    
 
 }

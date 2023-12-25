@@ -5,11 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./Patient.sol";
 import "./Doctor.sol";
 
-
-
 contract HospitalCases is Patient,Doctor{
-    
-   
 
         struct Cases{
             //病历id
@@ -33,11 +29,6 @@ contract HospitalCases is Patient,Doctor{
     mapping (address => Cases[]) public cases;
     uint indexId=0;
 
-    
-
-    // event MyEvent(string,uint ,uint , string);
-    // event info(string);
-    
     // 添加病历
     function addCases(
         address _patient,
@@ -45,17 +36,14 @@ contract HospitalCases is Patient,Doctor{
         string memory _appointmentTime,
         string memory _description,
         string memory _prescription,
-        string _money) public {
+        string memory _money) public {
         indexId++;
         Cases memory c = Cases(indexId,doctorMap[msg.sender],patientMap[_patient],_appointmentType,_appointmentTime,_description,_prescription,_money);
-        cases[_patient].push(c);
-        
+        cases[_patient].push(c);       
     }
 
     // 查询病例
     function queryCases(address addr) public view  returns (Cases[] memory) {  
         return cases[addr];
-    }
-
-    
+    }   
 }

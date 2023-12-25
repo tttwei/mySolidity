@@ -14,7 +14,7 @@ contract Doctor is Base{
         uint8 sex;
         // 年龄
         uint8 age;
-        //类型
+        //类型 1是医生 2是病人
         int8 theType; 
         //工龄
         uint8 workYear;
@@ -22,7 +22,6 @@ contract Doctor is Base{
     }
 
     mapping (address => DoctorInfo) public doctorMap;
-    address[] private doctorList;
     
     // 注册
     function addDoctor(string memory name,uint8 sex,uint8 age,uint8 workYear) public{
@@ -30,7 +29,7 @@ contract Doctor is Base{
         require(keccak256(abi.encodePacked(str)) == keccak256(""),"user has exist");
         DoctorInfo memory d=DoctorInfo(name,sex,age,1,workYear);
         doctorMap[msg.sender]=d;
-        doctorList.push(msg.sender);
+        // doctorList.push(msg.sender);
     }
 
     function addDoctor(address addr,string memory name,uint8 sex,uint8 age,uint8 workYear) public onlyAdmin{
@@ -38,7 +37,7 @@ contract Doctor is Base{
         require(keccak256(abi.encodePacked(str)) == keccak256(""),"user has exist");
         DoctorInfo memory d=DoctorInfo(name,sex,age,1,workYear);
         doctorMap[addr]=d;
-        doctorList.push(addr);
+        // doctorList.push(addr);
     }
 
     // 修改
@@ -46,7 +45,7 @@ contract Doctor is Base{
         string memory str = doctorMap[msg.sender].name;
         require(keccak256(abi.encodePacked(str)) != keccak256(""),"user not exist");
         DoctorInfo memory d=DoctorInfo(name,sex,age,1,workYear);
-        doctorMap[msg.sender]=d;        
+        doctorMap[msg.sender]=d;       
     }
 
     function updateDoctor(address addr,string memory name,uint8 sex,uint8 age,uint8 workYear) public onlyAdmin{
@@ -58,30 +57,19 @@ contract Doctor is Base{
 
     // 查询
     function queryDoctor(address addr) public view onlyAdmin returns (DoctorInfo memory){
-        return doctorMap[addr];
+        DoctorInfo memory d = doctorMap[addr];
+        return d;
     }
 
     function queryMySelf() public view returns (DoctorInfo memory){
-        return doctorMap[msg.sender];
+        DoctorInfo memory d = doctorMap[msg.sender];
+        return d;
     }
 
-    //查询所有
-    function queryAllDoctor()public view onlyAdmin returns(DoctorInfo[] memory){
-        DoctorInfo[] memory list;
-        for (uint i=0;i<doctorList.length;i++) {
-            list[i]=doctorMap[doctorList[i]];
-            
-            if (keccak256(abi.encodePacked(doctorMap[doctorList[i]].name)) == keccak256("")){
-                continue;
-            }
-        }
-        return list;
-    }
 
     //删除
     function delDoctor(address addr) public onlyAdmin {
-        DoctorInfo memory d = DoctorInfo("",0,0,-1,0);
-        doctorMap[addr]=d;
+        doctorMap[addr].theType=-1;
     }
 
   
