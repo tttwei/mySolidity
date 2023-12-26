@@ -1,3 +1,6 @@
 fisco:
-  user:
-    address: 0xed19e8abbe61bbf57ed5393d3434aa620b7afc47
+  config:
+    contractAddress: "0xed19e8abbe61bbf57ed5393d3434aa620b7afc47"
+    peers: 192.168.85.173:20200
+    SDKFile: conf
+    pemAccountFilePath: C:\code\fiscoProject\f3\src\main\resources\pem\0xf0c0b42c2b297d90ac89b3cecddda103f94efa81.pem

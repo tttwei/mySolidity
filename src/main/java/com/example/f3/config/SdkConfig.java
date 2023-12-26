@@ -1,9 +1,12 @@
 package com.example.f3.config;
 
+import com.example.f3.properties.ConfigProperties;
 import org.fisco.bcos.sdk.BcosSDK;
 import org.fisco.bcos.sdk.config.ConfigOption;
 import org.fisco.bcos.sdk.config.exceptions.ConfigException;
 import org.fisco.bcos.sdk.config.model.ConfigProperty;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,20 +14,18 @@ import java.util.*;
 
 @Configuration
 public class SdkConfig {
+    @Autowired
+    private ConfigProperties configProperties;
 
-
-    //配置1
     @Bean
     public ConfigProperty defaultConfigProperty() {
-
-        //配置2
         //sdk位置
         ConfigProperty configProperty = new ConfigProperty();
-        configProperty.setCryptoMaterial(Collections.singletonMap("certPath", "conf"));
+        configProperty.setCryptoMaterial(Collections.singletonMap("certPath", configProperties.getSDKFile()));
 
         //工作nodes网络地址
         Map<String, Object> networkMap = new HashMap<>();
-        networkMap.put("peers", Arrays.asList("192.168.85.173:20200", "192.168.85.173:20201"));
+        networkMap.put("peers", Arrays.asList(configProperties.getPeers()));
         configProperty.setNetwork(networkMap);
 
         //账户配置
