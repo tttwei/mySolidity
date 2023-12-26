@@ -38,10 +38,6 @@ public class DoctorController {
         return R.success();
     }
 
-//    @GetMapping("/{address}")
-//    public R<DoctorInfo> query(@PathVariable String address) throws ContractException {
-//        DoctorInfo doctorInfo = doctorService.query(address);
-//        return R.success(doctorInfo);
-//    }
+
 
 }
