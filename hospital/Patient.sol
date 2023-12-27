@@ -59,7 +59,7 @@ contract Patient is Base {
     }
 
     function queryPatient() public view returns (PatientInfo memory){
-        return patientMap[msg.sender];
+        return patientMap[tx.origin];
     }
 
     

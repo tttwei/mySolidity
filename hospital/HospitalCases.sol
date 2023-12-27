@@ -5,15 +5,22 @@ pragma experimental ABIEncoderV2;
 import "./Patient.sol";
 import "./Doctor.sol";
 
-contract HospitalCases is Patient,Doctor{
+contract HospitalCases {
+   constructor (address doctor,address patient) public {
+        d = Doctor(doctor);
+        p = Patient(patient);
+    }
+
+    Patient p;
+    Doctor d;
 
         struct Cases{
             //病历id
             uint id;
             // 医生
-            DoctorInfo doctor;
+            Doctor.DoctorInfo doctor;
             // 患者
-            PatientInfo patient;
+            Patient.PatientInfo patient;
             // 问诊类型
             string appointmentType;
             // 问诊时间
@@ -38,7 +45,8 @@ contract HospitalCases is Patient,Doctor{
         string memory _prescription,
         string memory _money) public {
         indexId++;
-        Cases memory c = Cases(indexId,doctorMap[msg.sender],patientMap[_patient],_appointmentType,_appointmentTime,_description,_prescription,_money);
+
+        Cases memory c = Cases(indexId,d.queryDoctor(),p.queryPatient(),_appointmentType,_appointmentTime,_description,_prescription,_money);
         cases[_patient].push(c);       
     }
 

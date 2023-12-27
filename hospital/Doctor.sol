@@ -61,8 +61,8 @@ contract Doctor is Base{
         return d;
     }
 
-    function queryMySelf() public view returns (DoctorInfo memory){
-        DoctorInfo memory d = doctorMap[msg.sender];
+    function queryDoctor() public view returns (DoctorInfo memory){
+        DoctorInfo memory d = doctorMap[tx.origin];
         return d;
     }
 
